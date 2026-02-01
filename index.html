@@ -3,27 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stats vs Scouts Decision Lab</title>
+<title>Stats vs Scouts - Basketball Decision Lab</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #0a0e1a;
-    --card: #141929;
-    --card-hover: #1a2035;
-    --accent: #4f7cff;
-    --accent2: #ff6b4f;
-    --green: #34d399;
-    --gold: #fbbf24;
-    --text: #e2e8f0;
-    --muted: #8892a8;
-    --border: #232942;
-    --scout-bg: #1e1535;
-    --stat-bg: #0f1f2e;
-    --correct: #065f46;
-    --wrong: #7f1d1d;
+    --bg: #0f1628;
+    --card: #171e33;
+    --accent: #5b8aff;
+    --accent2: #ff7a5c;
+    --green: #3ee0a5;
+    --gold: #ffc844;
+    --text: #e8ecf4;
+    --muted: #99a4bd;
+    --border: #283050;
   }
 
   body {
@@ -34,329 +29,370 @@
     overflow-x: hidden;
   }
 
-  /* ── Animated background ── */
+  /* ── Fun animated background ── */
   .bg-anim {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(79,124,255,.15), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,107,79,.08), transparent);
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(91,138,255,.18), transparent),
+      radial-gradient(ellipse 70% 50% at 80% 110%, rgba(255,122,92,.10), transparent),
+      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(62,224,165,.08), transparent);
   }
 
-  /* ── Layout ── */
-  .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; position: relative; z-index: 1; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 1.25rem; position: relative; z-index: 1; }
 
   /* ── Header ── */
-  header {
-    text-align: center; padding: 2rem 0 1rem;
-  }
+  header { text-align: center; padding: 1.5rem 0 .75rem; }
   header h1 {
-    font-size: 2.4rem; font-weight: 900;
+    font-size: 2.2rem; font-weight: 900;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     letter-spacing: -1px;
   }
-  header p { color: var(--muted); margin-top: .4rem; font-size: 1rem; }
+  header p { color: var(--muted); margin-top: .35rem; font-size: 1.05rem; }
 
   /* ── Progress bar ── */
   .progress-wrap {
     display: flex; align-items: center; gap: .75rem;
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 999px; padding: .5rem 1.2rem; margin: 1.5rem auto; max-width: 600px;
+    border-radius: 999px; padding: .55rem 1.2rem; margin: 1.25rem auto; max-width: 520px;
   }
-  .progress-wrap span { font-size: .8rem; color: var(--muted); white-space: nowrap; font-weight: 600; }
-  .progress-bar { flex: 1; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .progress-wrap span { font-size: .85rem; color: var(--muted); white-space: nowrap; font-weight: 700; }
+  .progress-bar { flex: 1; height: 10px; background: var(--border); border-radius: 999px; overflow: hidden; }
   .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 999px; transition: width .6s ease; }
 
   /* ── Screens ── */
   .screen { display: none; animation: fadeUp .5s ease; }
   .screen.active { display: block; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ── Intro ── */
   .intro-box {
-    text-align: center; padding: 3rem 2rem;
+    text-align: center; padding: 2.5rem 2rem;
     background: var(--card); border: 1px solid var(--border); border-radius: 1.2rem;
-    max-width: 700px; margin: 2rem auto;
+    max-width: 660px; margin: 1.5rem auto;
   }
-  .intro-box h2 { font-size: 1.6rem; margin-bottom: 1rem; }
-  .intro-box p { color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
-  .intro-box .emoji { font-size: 3rem; margin-bottom: 1rem; }
+  .intro-box .big-emoji { font-size: 4rem; margin-bottom: .75rem; }
+  .intro-box h2 { font-size: 1.7rem; margin-bottom: .75rem; }
+  .intro-box p { color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; font-size: 1.05rem; }
+  .intro-box .highlight { color: var(--text); font-weight: 700; }
 
   /* ── Buttons ── */
   .btn {
     display: inline-flex; align-items: center; gap: .5rem;
-    padding: .85rem 2rem; border: none; border-radius: .6rem;
-    font-family: inherit; font-weight: 700; font-size: 1rem;
+    padding: .9rem 2.2rem; border: none; border-radius: .7rem;
+    font-family: inherit; font-weight: 800; font-size: 1.05rem;
     cursor: pointer; transition: all .2s;
   }
   .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #3d6ae8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,124,255,.3); }
-  .btn-secondary { background: var(--border); color: var(--text); }
-  .btn-secondary:hover { background: #2d3555; }
-  .btn-gold { background: linear-gradient(135deg, var(--gold), #f59e0b); color: #000; }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(251,191,36,.3); }
-  .btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+  .btn-primary:hover { background: #4a78e8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(91,138,255,.35); }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), #f5a623); color: #1a1a2e; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,200,68,.35); }
+  .btn:disabled { opacity: .35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
   /* ── Stage header ── */
-  .stage-header {
-    text-align: center; margin-bottom: 2rem;
-  }
+  .stage-header { text-align: center; margin-bottom: 1.5rem; }
   .stage-label {
-    display: inline-block; background: var(--accent); color: #fff; font-size: .7rem;
-    font-weight: 700; padding: .3rem .8rem; border-radius: 999px; text-transform: uppercase;
+    display: inline-block; background: var(--accent); color: #fff; font-size: .75rem;
+    font-weight: 800; padding: .35rem .9rem; border-radius: 999px; text-transform: uppercase;
     letter-spacing: 1px; margin-bottom: .5rem;
   }
-  .stage-header h2 { font-size: 1.5rem; font-weight: 800; }
-  .stage-header p { color: var(--muted); margin-top: .3rem; }
+  .stage-header h2 { font-size: 1.6rem; font-weight: 800; }
+  .stage-header p { color: var(--muted); margin-top: .3rem; font-size: 1rem; }
+
+  /* ── Help box ── */
+  .help-box {
+    background: rgba(91,138,255,.08); border: 1px solid rgba(91,138,255,.22);
+    border-radius: .9rem; padding: 1.1rem 1.5rem; margin-bottom: 1.75rem;
+    font-size: .95rem; color: var(--muted); line-height: 1.7; text-align: center;
+  }
+  .help-box strong { color: var(--text); }
+
+  /* ── Glossary tooltip ── */
+  .glossary {
+    display: inline-block; position: relative; border-bottom: 1px dashed var(--accent);
+    cursor: help; color: var(--accent); font-weight: 600;
+  }
+  .glossary .tip {
+    display: none; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: #222b48; color: var(--text); padding: .6rem .9rem; border-radius: .5rem;
+    font-size: .78rem; font-weight: 500; width: 220px; text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.4); z-index: 10; line-height: 1.4;
+  }
+  .glossary:hover .tip { display: block; }
 
   /* ── Player card ── */
   .player-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
-    margin-bottom: 1.5rem; overflow: hidden; transition: border-color .3s;
+    background: var(--card); border: 2px solid var(--border); border-radius: 1rem;
+    margin-bottom: 1.75rem; overflow: hidden; transition: border-color .3s;
   }
-  .player-card:hover { border-color: #3a4566; }
+  .player-card:hover { border-color: #3d4f78; }
   .player-card-head {
     display: flex; align-items: center; gap: 1rem;
-    padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border);
     background: rgba(255,255,255,.02);
   }
   .player-avatar {
-    width: 56px; height: 56px; border-radius: 50%;
+    width: 58px; height: 58px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; font-weight: 800; color: #fff; flex-shrink: 0;
+    font-size: 1.5rem; font-weight: 900; color: #fff; flex-shrink: 0;
   }
-  .player-info h3 { font-size: 1.1rem; font-weight: 700; }
-  .player-info .team-pos { font-size: .8rem; color: var(--muted); }
+  .player-info h3 { font-size: 1.15rem; font-weight: 800; }
+  .player-info .team-pos { font-size: .85rem; color: var(--muted); }
 
-  .card-columns {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-  }
-  .card-col {
-    padding: 1.2rem 1.5rem;
-  }
+  .card-columns { display: grid; grid-template-columns: 1fr 1fr; }
+  .card-col { padding: 1.1rem 1.4rem; }
   .card-col:first-child { border-right: 1px solid var(--border); }
   .card-col-label {
-    font-size: .65rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1.5px; margin-bottom: .8rem; display: flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: .7rem; display: flex; align-items: center; gap: .4rem;
   }
-  .label-scout { color: #c084fc; }
-  .label-stat { color: #38bdf8; }
-  .card-col p { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+  .label-scout { color: #c89aff; }
+  .label-stat { color: #5cc8f5; }
+  .card-col p { font-size: .92rem; color: var(--muted); line-height: 1.65; }
 
-  .stat-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: .5rem;
-  }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
   .stat-item {
-    background: rgba(255,255,255,.03); border-radius: .5rem; padding: .5rem .7rem;
+    background: rgba(255,255,255,.04); border-radius: .5rem; padding: .55rem .7rem;
   }
-  .stat-item .stat-val { font-size: 1.05rem; font-weight: 800; color: var(--text); }
-  .stat-item .stat-label { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .stat-item .stat-val { font-size: 1.1rem; font-weight: 900; color: var(--text); }
+  .stat-item .stat-label { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
 
-  /* ── Choice buttons in Stage 1 ── */
+  /* ── Choice buttons ── */
   .choice-row {
-    display: flex; gap: .75rem; padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+    display: flex; gap: .75rem; padding: 1rem 1.4rem; border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
   .choice-btn {
-    flex: 1; min-width: 100px; padding: .65rem .5rem; border: 2px solid var(--border);
-    background: transparent; border-radius: .5rem; color: var(--text);
-    font-family: inherit; font-weight: 600; font-size: .82rem; cursor: pointer; transition: all .2s;
+    flex: 1; min-width: 100px; padding: .75rem .5rem; border: 2px solid var(--border);
+    background: transparent; border-radius: .6rem; color: var(--text);
+    font-family: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; transition: all .2s;
   }
-  .choice-btn:hover { border-color: var(--accent); background: rgba(79,124,255,.08); }
-  .choice-btn.selected { border-color: var(--accent); background: rgba(79,124,255,.15); color: #fff; }
-  .choice-btn.correct { border-color: var(--green); background: rgba(52,211,153,.12); color: var(--green); }
-  .choice-btn.wrong { border-color: var(--accent2); background: rgba(255,107,79,.12); color: var(--accent2); }
-  .choice-btn:disabled { cursor: default; opacity: .7; }
+  .choice-btn:hover { border-color: var(--accent); background: rgba(91,138,255,.08); }
+  .choice-btn.selected { border-color: var(--accent); background: rgba(91,138,255,.15); color: #fff; }
+  .choice-btn.correct { border-color: var(--green); background: rgba(62,224,165,.12); color: var(--green); }
+  .choice-btn.wrong { border-color: var(--accent2); background: rgba(255,122,92,.12); color: var(--accent2); }
+  .choice-btn:disabled { cursor: default; }
 
-  /* ── Reveal overlay ── */
+  /* ── Reveal bar ── */
   .reveal-bar {
-    display: none; padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+    display: none; padding: 1.1rem 1.4rem; border-top: 1px solid var(--border);
     background: rgba(255,255,255,.02); animation: fadeUp .4s ease;
   }
-  .reveal-bar.show { display: flex; align-items: flex-start; gap: 1rem; }
-  .reveal-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
-  .reveal-text h4 { font-size: .95rem; font-weight: 700; margin-bottom: .25rem; }
-  .reveal-text p { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+  .reveal-bar.show { display: flex; align-items: flex-start; gap: .9rem; }
+  .reveal-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+  .reveal-text h4 { font-size: 1rem; font-weight: 800; margin-bottom: .3rem; }
+  .reveal-text p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── Fun fact badge ── */
+  .fun-fact {
+    margin-top: .6rem; padding: .5rem .8rem; background: rgba(255,200,68,.08);
+    border: 1px solid rgba(255,200,68,.18); border-radius: .5rem;
+    font-size: .82rem; color: var(--gold); line-height: 1.5;
+  }
 
   /* ── Stage 2 sign cards ── */
-  .sign-cards {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;
+  .sign-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  @media (max-width: 700px) {
+    .sign-cards { grid-template-columns: 1fr; }
+    .card-columns { grid-template-columns: 1fr; }
+    .card-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
   }
-  @media (max-width: 700px) { .sign-cards { grid-template-columns: 1fr; } .card-columns { grid-template-columns: 1fr; } .card-col:first-child { border-right: none; border-bottom: 1px solid var(--border); } }
 
   .sign-card {
     background: var(--card); border: 2px solid var(--border); border-radius: 1rem;
-    overflow: hidden; cursor: pointer; transition: all .3s;
-    position: relative;
+    overflow: hidden; cursor: pointer; transition: all .3s; position: relative;
   }
-  .sign-card:hover { border-color: #3a4566; transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
-  .sign-card.selected-sign { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,124,255,.2); }
-  .sign-card.correct-sign { border-color: var(--green); box-shadow: 0 0 0 3px rgba(52,211,153,.2); }
-  .sign-card.wrong-sign { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(255,107,79,.2); }
+  .sign-card:hover { border-color: #3d4f78; transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.3); }
+  .sign-card.selected-sign { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,138,255,.22); }
+  .sign-card.correct-sign { border-color: var(--green); box-shadow: 0 0 0 3px rgba(62,224,165,.22); }
+  .sign-card.wrong-sign { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(255,122,92,.22); }
+
   .sign-card-head {
-    padding: 1.5rem; text-align: center; border-bottom: 1px solid var(--border);
+    padding: 1.4rem; text-align: center; border-bottom: 1px solid var(--border);
   }
-  .sign-card-head .player-avatar { margin: 0 auto .8rem; width: 70px; height: 70px; font-size: 1.8rem; }
-  .sign-card-head h3 { font-size: 1.15rem; font-weight: 800; }
-  .sign-card-head .team-pos { color: var(--muted); font-size: .82rem; }
-  .sign-card-body { padding: 1.2rem 1.5rem; }
-  .sign-card-body h4 { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: .6rem; }
-  .sign-card-body p { font-size: .85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+  .sign-card-head .player-avatar { margin: 0 auto .7rem; width: 72px; height: 72px; font-size: 1.9rem; }
+  .sign-card-head h3 { font-size: 1.2rem; font-weight: 900; }
+  .sign-card-head .team-pos { color: var(--muted); font-size: .85rem; }
+  .sign-card-body { padding: 1.2rem 1.4rem; }
+  .sign-card-body h4 {
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--muted); margin-bottom: .6rem;
+  }
+  .sign-card-body p { font-size: .9rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
 
   .contract-tag {
-    display: inline-block; padding: .4rem .8rem; border-radius: .4rem;
-    font-weight: 700; font-size: .85rem; margin-bottom: .5rem;
+    display: inline-block; padding: .45rem .9rem; border-radius: .5rem;
+    font-weight: 800; font-size: .9rem; margin-bottom: .4rem;
   }
-  .contract-blue { background: rgba(79,124,255,.15); color: var(--accent); }
-  .contract-green { background: rgba(52,211,153,.15); color: var(--green); }
+  .contract-blue { background: rgba(91,138,255,.15); color: var(--accent); }
+  .contract-green { background: rgba(62,224,165,.15); color: var(--green); }
 
-  .mini-stat { display: flex; justify-content: space-between; padding: .35rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; }
+  .mini-stat {
+    display: flex; justify-content: space-between; padding: .4rem 0;
+    border-bottom: 1px solid var(--border); font-size: .88rem;
+  }
   .mini-stat:last-child { border-bottom: none; }
   .mini-stat .ms-label { color: var(--muted); }
-  .mini-stat .ms-val { font-weight: 700; }
+  .mini-stat .ms-val { font-weight: 800; }
 
   .sign-badge {
-    position: absolute; top: 1rem; right: 1rem; padding: .3rem .7rem;
-    border-radius: 999px; font-size: .7rem; font-weight: 700;
+    position: absolute; top: .8rem; right: .8rem; padding: .3rem .75rem;
+    border-radius: 999px; font-size: .72rem; font-weight: 800;
     text-transform: uppercase; letter-spacing: .5px; display: none;
   }
   .sign-card.correct-sign .sign-badge { display: block; background: var(--green); color: #000; }
   .sign-card.wrong-sign .sign-badge { display: block; background: var(--accent2); color: #fff; }
 
-  /* ── Results ── */
-  .results-box {
-    text-align: center; padding: 3rem 2rem;
-    background: var(--card); border: 1px solid var(--border); border-radius: 1.2rem;
-    max-width: 700px; margin: 2rem auto;
+  /* ── Stage 2 explanation reveal ── */
+  .s2-reveal {
+    display: none; background: var(--card); border: 1px solid var(--border);
+    border-radius: 1rem; padding: 1.4rem 1.6rem; margin-bottom: 1.5rem;
+    animation: fadeUp .4s ease;
   }
-  .results-box h2 { font-size: 1.8rem; margin-bottom: .5rem; }
-  .score-big {
-    font-size: 4rem; font-weight: 900;
-    background: linear-gradient(135deg, var(--accent), var(--green));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 1rem 0;
-  }
-  .score-breakdown {
-    display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0;
-  }
-  .score-part { text-align: center; }
-  .score-part .sp-num { font-size: 1.5rem; font-weight: 800; }
-  .score-part .sp-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
-  .verdict {
-    background: rgba(255,255,255,.04); border-radius: .8rem; padding: 1.2rem;
-    margin-top: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;
-  }
-  .verdict h4 { margin-bottom: .4rem; font-size: 1rem; }
-  .verdict p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+  .s2-reveal.show { display: block; }
+  .s2-reveal h4 { font-size: 1rem; font-weight: 800; margin-bottom: .4rem; }
+  .s2-reveal p { font-size: .92rem; color: var(--muted); line-height: 1.65; }
 
-  /* ── Action footer ── */
-  .action-footer {
-    text-align: center; margin: 2rem 0;
-  }
-
-  /* ── Tooltip on stage explanation ── */
-  .stage-explain {
-    background: rgba(79,124,255,.08); border: 1px solid rgba(79,124,255,.2);
-    border-radius: .8rem; padding: 1rem 1.5rem; margin-bottom: 2rem;
-    font-size: .88rem; color: var(--muted); line-height: 1.6; text-align: center;
-  }
-  .stage-explain strong { color: var(--text); }
-
-  /* Timer bar */
+  /* ── Timer bar ── */
   .timer-bar-wrap {
-    max-width: 600px; margin: 0 auto 1.5rem; display: flex; align-items: center; gap: .75rem;
+    max-width: 520px; margin: 0 auto 1.5rem; display: flex; align-items: center; gap: .75rem;
   }
-  .timer-bar-wrap .timer-label { font-size: .8rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
-  .timer-track { flex: 1; height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .timer-bar-wrap .timer-label { font-size: .85rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
+  .timer-track { flex: 1; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
   .timer-fill { height: 100%; background: var(--gold); border-radius: 999px; transition: width .25s linear; width: 100%; }
   .timer-fill.danger { background: var(--accent2); }
+
+  /* ── Results ── */
+  .results-box {
+    text-align: center; padding: 2.5rem 2rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: 1.2rem;
+    max-width: 660px; margin: 1.5rem auto;
+  }
+  .results-box .big-emoji { font-size: 4rem; margin-bottom: .5rem; }
+  .results-box h2 { font-size: 1.8rem; margin-bottom: .5rem; }
+  .score-big {
+    font-size: 3.5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: .75rem 0;
+  }
+  .score-breakdown { display: flex; justify-content: center; gap: 2.5rem; margin: 1.25rem 0; }
+  .score-part { text-align: center; }
+  .score-part .sp-num { font-size: 1.6rem; font-weight: 900; }
+  .score-part .sp-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .verdict {
+    background: rgba(255,255,255,.04); border-radius: .8rem; padding: 1.3rem;
+    margin-top: 1.25rem; max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+  .verdict h4 { margin-bottom: .4rem; font-size: 1.05rem; }
+  .verdict p { color: var(--muted); font-size: .92rem; line-height: 1.65; }
+
+  .action-footer { text-align: center; margin: 1.75rem 0; }
+
+  /* ── Confetti canvas ── */
+  #confetti { position: fixed; inset: 0; z-index: 100; pointer-events: none; }
 </style>
 </head>
 <body>
 <div class="bg-anim"></div>
+<canvas id="confetti"></canvas>
 <div class="container">
 
-  <!-- Header -->
   <header>
-    <h1>Stats vs Scouts Decision Lab</h1>
-    <p>Can you tell who the scouts loved vs. what the numbers say?</p>
+    <h1>Stats vs Scouts</h1>
+    <p>The Basketball Decision Lab</p>
   </header>
 
-  <!-- Progress -->
   <div class="progress-wrap">
     <span id="progLabel">0 / 4</span>
     <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
     <span id="scoreLabel">Score: 0</span>
   </div>
 
-  <!-- ════════════ SCREEN: INTRO ════════════ -->
+  <!-- ═══════ INTRO ═══════ -->
   <div class="screen active" id="introScreen">
     <div class="intro-box">
-      <div class="emoji">&#127936;</div>
-      <h2>Welcome, GM</h2>
-      <p>You've just been hired as the new General Manager. Your front office has <strong>scout reports</strong> and <strong>advanced analytics</strong> on real NBA players &mdash; but they don't always agree.<br><br>
-      Your job: figure out <strong>who was more right</strong>, then make a <strong>real signing decision</strong> using both lenses.</p>
-      <button class="btn btn-primary" onclick="startGame()">Start the Lab</button>
+      <div class="big-emoji">&#127936;</div>
+      <h2>Hey There, Future GM!</h2>
+      <p>
+        Imagine you just got hired to run an NBA team. Cool, right?<br><br>
+        Your team has two ways to judge players:<br>
+        <span class="highlight">Scouts</span> &mdash; people who watch games and share their opinions.<br>
+        <span class="highlight">Stats</span> &mdash; numbers that show how a player actually performed.<br><br>
+        Sometimes they agree. Sometimes they don't!<br>
+        Your job is to figure out <span class="highlight">who got it right</span>.
+      </p>
+      <button class="btn btn-primary" onclick="startGame()">Let's Go!</button>
     </div>
   </div>
 
-  <!-- ════════════ SCREEN: STAGE 1 ════════════ -->
+  <!-- ═══════ STAGE 1 ═══════ -->
   <div class="screen" id="stage1Screen">
     <div class="stage-header">
-      <span class="stage-label">Stage 1</span>
-      <h2>Who Was More Right?</h2>
-      <p>For each real player, read the scout take and the stats &mdash; then decide which side told the real story.</p>
+      <span class="stage-label">Round 1</span>
+      <h2>Who Got It Right?</h2>
+      <p>Read what the scouts said and look at the stats. Then pick who was more right!</p>
     </div>
 
-    <div class="stage-explain">
-      <strong>How it works:</strong> Each card shows a real NBA player. The left side is the <strong>scouting report</strong> and the right side is the <strong>advanced stats</strong>. Pick who was more right: the scouts, the stats, or both.
+    <div class="help-box">
+      <strong>Quick guide:</strong> The <strong>left side</strong> shows what scouts said about each player before seeing them play much.
+      The <strong>right side</strong> shows what the <strong>numbers</strong> actually say.
+      Pick who told the real story &mdash; the <strong>Scouts</strong>, the <strong>Stats</strong>, or <strong>Both</strong>!
+      <br><em>(Hover or tap the blue words on stat cards to learn what they mean!)</em>
     </div>
 
     <div id="stage1Cards"></div>
 
     <div class="action-footer">
-      <button class="btn btn-primary" id="stage1Next" disabled onclick="goToStage2()">Continue to Stage 2</button>
+      <button class="btn btn-primary" id="stage1Next" disabled onclick="goToStage2()">On to Round 2!</button>
     </div>
   </div>
 
-  <!-- ════════════ SCREEN: STAGE 2 ════════════ -->
+  <!-- ═══════ STAGE 2 ═══════ -->
   <div class="screen" id="stage2Screen">
     <div class="stage-header">
-      <span class="stage-label" style="background:var(--accent2)">Stage 2</span>
+      <span class="stage-label" style="background:var(--accent2)">Round 2</span>
       <h2>Who Should You Sign?</h2>
-      <p>Use everything you've learned. Pick the smarter signing for your franchise.</p>
+      <p>Time to make a real decision! Pick the player who's the better deal for your team.</p>
     </div>
 
-    <div class="stage-explain">
-      <strong>The scenario:</strong> Your team needs a difference-maker. You have cap space and two real free agents to choose from. Consider the <strong>scouting report</strong>, <strong>advanced stats</strong>, and the <strong>contract</strong>. Who gives you more value?
+    <div class="help-box">
+      <strong>The situation:</strong> Your team has money to sign <strong>one</strong> new player.
+      Look at what the scouts say, what the numbers show, AND how much each player costs.
+      Who gives your team the <strong>best bang for your buck</strong>?
     </div>
 
     <div class="timer-bar-wrap" id="timerWrap" style="display:none;">
-      <span class="timer-label" id="timerText">30s</span>
+      <span class="timer-label" id="timerText">45s</span>
       <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
     </div>
 
     <div class="sign-cards" id="stage2Cards"></div>
 
+    <div id="s2RevealBox" class="s2-reveal">
+      <h4 id="s2RevealTitle"></h4>
+      <p id="s2RevealText"></p>
+    </div>
+
     <div class="action-footer">
-      <button class="btn btn-gold" id="stage2Confirm" disabled onclick="confirmSign()">Confirm Signing</button>
+      <button class="btn btn-gold" id="stage2Confirm" disabled onclick="confirmSign()">Lock In My Pick!</button>
     </div>
   </div>
 
-  <!-- ════════════ SCREEN: RESULTS ════════════ -->
+  <!-- ═══════ RESULTS ═══════ -->
   <div class="screen" id="resultsScreen">
     <div class="results-box">
-      <div class="emoji">&#127942;</div>
-      <h2>Lab Complete</h2>
+      <div class="big-emoji" id="resultsEmoji">&#127942;</div>
+      <h2>Great Job!</h2>
       <div class="score-big" id="finalScore">0 / 4</div>
       <div class="score-breakdown">
         <div class="score-part">
           <div class="sp-num" id="s1Score">0/3</div>
-          <div class="sp-label">Stage 1</div>
+          <div class="sp-label">Round 1</div>
         </div>
         <div class="score-part">
           <div class="sp-num" id="s2Score">0/1</div>
-          <div class="sp-label">Stage 2</div>
+          <div class="sp-label">Round 2</div>
         </div>
       </div>
       <div class="verdict" id="verdictBox">
@@ -372,109 +408,136 @@
 
 <script>
 // ═══════════════════════════════════════════
-//  REAL NBA PLAYER DATA
+//  GLOSSARY — kid-friendly stat definitions
+// ═══════════════════════════════════════════
+const glossary = {
+  "PPG":       "Points Per Game &mdash; how many points they score each game on average.",
+  "RPG":       "Rebounds Per Game &mdash; how often they grab the ball after a missed shot.",
+  "APG":       "Assists Per Game &mdash; how many times they pass to a teammate who scores.",
+  "SPG":       "Steals Per Game &mdash; how often they take the ball from the other team.",
+  "BPG":       "Blocks Per Game &mdash; how often they swat away the other team's shots.",
+  "FG%":       "Field Goal % &mdash; what percentage of their shots go in. Higher = better shooter.",
+  "3PT%":      "3-Point % &mdash; what percentage of their 3-point shots go in.",
+  "+/-":       "Plus/Minus &mdash; does the team score more or get scored on more when this player is on the court? Positive is good!",
+  "TO/G":      "Turnovers Per Game &mdash; how often they lose the ball. Lower is better!",
+  "MPG":       "Minutes Per Game &mdash; how many minutes per game the coach puts them in.",
+};
+
+function glossWrap(label) {
+  const tip = glossary[label];
+  if (!tip) return label;
+  return `<span class="glossary">${label}<span class="tip">${tip}</span></span>`;
+}
+
+// ═══════════════════════════════════════════
+//  REAL NBA PLAYER DATA  (kid-friendly stats)
 // ═══════════════════════════════════════════
 
 const stage1Players = [
   {
     name: "Andrew Wiggins",
-    team: "MIN (2015-20)",
-    pos: "SF",
+    team: "Minnesota Timberwolves (2015-20)",
+    pos: "Small Forward",
     color: "#1d428a",
     initials: "AW",
-    scout: "Explosive scorer with elite athleticism. Smooth jumper, can create his own shot. High ceiling &mdash; potential franchise cornerstone. Draws comparisons to a young T-Mac.",
+    scout: "Super athletic &mdash; can jump out of the gym! Smooth jump shot and can score from anywhere. Scouts thought he'd be a future superstar and the next big thing.",
     stats: [
       { label: "PPG", val: "22.4" },
-      { label: "TS%", val: "50.3%" },
+      { label: "FG%", val: "44%" },
+      { label: "3PT%", val: "33%" },
+      { label: "RPG", val: "4.3" },
       { label: "TO/G", val: "2.3" },
-      { label: "DEF RTG", val: "112" },
-      { label: "On/Off", val: "-4.2" },
-      { label: "WS/48", val: ".048" }
+      { label: "+/-", val: "-4.2" }
     ],
     answer: "stats",
-    revealTitle: "The stats were more right.",
-    revealText: "Scouts loved Wiggins' tools, but advanced stats always showed inefficiency (50% TS), poor defense, and a negative on/off. He didn't become a true impact player until Golden State reshaped his role."
+    revealTitle: "The Stats were more right!",
+    revealText: "Scouts loved how athletic Wiggins looked, but the numbers told a different story. He only made 44% of his shots, turned the ball over a lot, and his team actually did worse when he was on the court (-4.2). He didn't become a real winner until he joined Golden State and changed his role.",
+    funFact: "Fun fact: Wiggins was the #1 pick in the 2014 NBA Draft!"
   },
   {
     name: "Draymond Green",
-    team: "GSW (2015-20)",
-    pos: "PF",
+    team: "Golden State Warriors (2015-20)",
+    pos: "Power Forward",
     color: "#006bb6",
     initials: "DG",
-    scout: "Undersized, limited scorer, tweener body. High basketball IQ and motor but lacks a go-to offensive skill. Second-round talent at best.",
+    scout: "Too short for his position. Can't really score. Doesn't have a go-to move on offense. Scouts thought he was a backup player at best &mdash; he was picked in the 2nd round!",
     stats: [
       { label: "PPG", val: "11.3" },
-      { label: "TS%", val: "56.4%" },
-      { label: "AST/G", val: "7.0" },
-      { label: "DEF RTG", val: "101" },
-      { label: "On/Off", val: "+7.8" },
-      { label: "WS/48", val: ".152" }
+      { label: "APG", val: "7.0" },
+      { label: "RPG", val: "8.2" },
+      { label: "SPG", val: "1.4" },
+      { label: "BPG", val: "1.3" },
+      { label: "+/-", val: "+7.8" }
     ],
     answer: "stats",
-    revealTitle: "The stats were more right.",
-    revealText: "Scouts saw a limited tweener. The stats saw elite defense (101 DEF RTG), elite playmaking (7 APG), and a massive +7.8 on/off swing. Draymond became a DPOY and the engine of a dynasty."
+    revealTitle: "The Stats were more right!",
+    revealText: "Scouts thought Draymond was too small and couldn't score enough. But the numbers showed he did everything else amazingly &mdash; 7 assists, 8 rebounds, and his team scored way more with him on the court (+7.8)! He won Defensive Player of the Year and helped the Warriors win championships.",
+    funFact: "Fun fact: Draymond was picked 35th in the draft &mdash; and became a 4x champion!"
   },
   {
     name: "Luka Doncic",
-    team: "DAL (2019-23)",
-    pos: "PG/SG",
+    team: "Dallas Mavericks (2019-23)",
+    pos: "Point Guard",
     color: "#00538c",
     initials: "LD",
-    scout: "Generational feel for the game. Elite passer, scorer, and leader. Could be the best European prospect ever. Concerns: lateral quickness, NBA athleticism, and defensive effort.",
+    scout: "Incredible basketball brain &mdash; always knows the right play. Amazing passer and scorer. BUT scouts also worried he might not be fast enough to guard NBA players and could be lazy on defense.",
     stats: [
       { label: "PPG", val: "28.7" },
-      { label: "TS%", val: "57.8%" },
-      { label: "AST/G", val: "8.7" },
-      { label: "DEF RTG", val: "113" },
-      { label: "On/Off", val: "+3.1" },
-      { label: "WS/48", val: ".149" }
+      { label: "APG", val: "8.7" },
+      { label: "RPG", val: "8.8" },
+      { label: "FG%", val: "46%" },
+      { label: "3PT%", val: "35%" },
+      { label: "+/-", val: "+3.1" }
     ],
     answer: "both",
     revealTitle: "Both were right!",
-    revealText: "Scouts nailed his offensive genius AND flagged real defensive concerns (113 DEF RTG). Stats confirmed he's an elite offensive engine (28.7 PPG, 57.8% TS) with middling defense. Both lenses painted an accurate picture."
+    revealText: "The scouts were right that Luka is an offensive genius &mdash; almost 29 points, 9 assists, and 9 rebounds a game is incredible! But they were also right about his defense being a weak spot. The stats confirmed both things. Sometimes both sides of the story are true!",
+    funFact: "Fun fact: Luka won a professional championship in Europe when he was only 16 years old!"
   }
 ];
 
 const stage2Players = [
   {
     name: "Zach LaVine",
-    team: "CHI Bulls",
-    pos: "SG",
+    team: "Chicago Bulls",
+    pos: "Shooting Guard",
     color: "#ce1141",
     initials: "ZL",
-    contract: "4 yr / $84M",
+    contract: "$21 million / year",
     contractClass: "contract-blue",
-    scout: "Electric scorer and explosive athlete. Highlight-reel dunker. Can get a bucket anytime &mdash; a go-to option in crunch time. Injury history is a concern.",
+    scout: "Amazing dunker and super exciting to watch. Can score a ton of points and hit big shots. But he gets hurt a lot and doesn't play great defense.",
     statLines: [
       { label: "PPG", val: "24.8" },
-      { label: "TS%", val: "57.6%" },
-      { label: "DEF RTG", val: "114" },
-      { label: "On/Off", val: "-1.3" },
-      { label: "WS/48", val: ".089" },
-      { label: "VORP", val: "1.8" }
+      { label: "FG%", val: "48%" },
+      { label: "3PT%", val: "38%" },
+      { label: "RPG", val: "4.6" },
+      { label: "APG", val: "4.5" },
+      { label: "+/-", val: "-1.3" }
     ]
   },
   {
     name: "Mikal Bridges",
-    team: "PHX / BKN",
-    pos: "SF",
+    team: "Phoenix / Brooklyn",
+    pos: "Small Forward",
     color: "#1d1160",
     initials: "MB",
-    contract: "4 yr / $52M",
+    contract: "$13 million / year",
     contractClass: "contract-green",
-    scout: "Elite 3-and-D wing. High IQ, never out of position. Won't wow you with highlights but raises every lineup's floor. Ironman durability.",
+    scout: "Does everything well &mdash; great defender, smart player, good shooter. Doesn't make highlight reels but makes every team he's on better. Almost never misses a game!",
     statLines: [
       { label: "PPG", val: "14.8" },
-      { label: "TS%", val: "60.2%" },
-      { label: "DEF RTG", val: "107" },
-      { label: "On/Off", val: "+4.2" },
-      { label: "WS/48", val: ".122" },
-      { label: "VORP", val: "2.1" }
+      { label: "FG%", val: "49%" },
+      { label: "3PT%", val: "37%" },
+      { label: "SPG", val: "1.1" },
+      { label: "BPG", val: "0.6" },
+      { label: "+/-", val: "+4.2" }
     ]
   }
 ];
 
-const stage2Answer = 1; // Mikal Bridges index — better value
+const stage2Answer = 1; // Mikal Bridges = better value
+const stage2RevealTitle = "Best pick: Mikal Bridges!";
+const stage2RevealText = "Even though LaVine scores more, Bridges costs $8 million less per year, plays amazing defense, almost never gets hurt, and his teams actually score MORE with him on the court (+4.2 vs -1.3). That's way more value for your money! A smart GM thinks about the whole picture &mdash; not just points.";
 
 // ═══════════════════════════════════════════
 //  GAME STATE
@@ -483,13 +546,13 @@ let s1Answers = [null, null, null];
 let s1Locked  = [false, false, false];
 let s2Choice  = null;
 let s2Locked  = false;
-let score = 0;
-let totalQ = 4;
-let answered = 0;
+let score     = 0;
+let totalQ    = 4;
+let answered  = 0;
 let timerInterval = null;
 
 // ═══════════════════════════════════════════
-//  RENDER FUNCTIONS
+//  RENDER
 // ═══════════════════════════════════════════
 
 function renderStage1() {
@@ -498,7 +561,6 @@ function renderStage1() {
   stage1Players.forEach((p, i) => {
     const card = document.createElement('div');
     card.className = 'player-card';
-    card.id = `s1card${i}`;
     card.innerHTML = `
       <div class="player-card-head">
         <div class="player-avatar" style="background:${p.color}">${p.initials}</div>
@@ -509,26 +571,27 @@ function renderStage1() {
       </div>
       <div class="card-columns">
         <div class="card-col">
-          <div class="card-col-label label-scout">&#128065; Scout Report</div>
+          <div class="card-col-label label-scout">&#128064; What Scouts Said</div>
           <p>${p.scout}</p>
         </div>
         <div class="card-col">
-          <div class="card-col-label label-stat">&#128202; Advanced Stats</div>
+          <div class="card-col-label label-stat">&#128202; What the Numbers Say</div>
           <div class="stat-grid">
-            ${p.stats.map(s => `<div class="stat-item"><div class="stat-val">${s.val}</div><div class="stat-label">${s.label}</div></div>`).join('')}
+            ${p.stats.map(s => `<div class="stat-item"><div class="stat-val">${s.val}</div><div class="stat-label">${glossWrap(s.label)}</div></div>`).join('')}
           </div>
         </div>
       </div>
       <div class="choice-row" id="choices${i}">
-        <button class="choice-btn" data-idx="${i}" data-val="scouts" onclick="pickS1(${i},'scouts',this)">Scouts</button>
-        <button class="choice-btn" data-idx="${i}" data-val="stats" onclick="pickS1(${i},'stats',this)">Stats</button>
-        <button class="choice-btn" data-idx="${i}" data-val="both" onclick="pickS1(${i},'both',this)">Both</button>
+        <button class="choice-btn" data-val="scouts" onclick="pickS1(${i},'scouts',this)">&#128064; Scouts Were Right</button>
+        <button class="choice-btn" data-val="stats" onclick="pickS1(${i},'stats',this)">&#128202; Stats Were Right</button>
+        <button class="choice-btn" data-val="both" onclick="pickS1(${i},'both',this)">&#129309; Both Were Right</button>
       </div>
       <div class="reveal-bar" id="reveal${i}">
         <div class="reveal-icon" id="revealIcon${i}"></div>
         <div class="reveal-text">
           <h4 id="revealTitle${i}"></h4>
           <p id="revealText${i}"></p>
+          <div class="fun-fact" id="funFact${i}"></div>
         </div>
       </div>
     `;
@@ -550,13 +613,13 @@ function renderStage2() {
         <div class="player-avatar" style="background:${p.color}">${p.initials}</div>
         <h3>${p.name}</h3>
         <div class="team-pos">${p.team} &bull; ${p.pos}</div>
-        <div class="contract-tag ${p.contractClass}" style="margin-top:.8rem">${p.contract}</div>
+        <div class="contract-tag ${p.contractClass}" style="margin-top:.7rem">${p.contract}</div>
       </div>
       <div class="sign-card-body">
-        <h4>&#128065; Scout Take</h4>
+        <h4>&#128064; What Scouts Say</h4>
         <p>${p.scout}</p>
-        <h4>&#128202; Key Stats</h4>
-        ${p.statLines.map(s => `<div class="mini-stat"><span class="ms-label">${s.label}</span><span class="ms-val">${s.val}</span></div>`).join('')}
+        <h4>&#128202; Key Numbers</h4>
+        ${p.statLines.map(s => `<div class="mini-stat"><span class="ms-label">${glossWrap(s.label)}</span><span class="ms-val">${s.val}</span></div>`).join('')}
       </div>
     `;
     wrap.appendChild(card);
@@ -575,13 +638,11 @@ function startGame() {
 
 function pickS1(idx, val, btn) {
   if (s1Locked[idx]) return;
-  // Toggle selection
   const row = document.getElementById(`choices${idx}`);
   row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   s1Answers[idx] = val;
 
-  // Lock immediately and reveal
   s1Locked[idx] = true;
   const correct = stage1Players[idx].answer;
   const isCorrect = val === correct;
@@ -595,25 +656,25 @@ function pickS1(idx, val, btn) {
   if (isCorrect) score++;
   answered++;
 
-  // Reveal explanation
   const rev = document.getElementById(`reveal${idx}`);
   rev.classList.add('show');
   document.getElementById(`revealIcon${idx}`).textContent = isCorrect ? '\u2705' : '\u274C';
   document.getElementById(`revealTitle${idx}`).textContent = stage1Players[idx].revealTitle;
   document.getElementById(`revealText${idx}`).textContent = stage1Players[idx].revealText;
+  document.getElementById(`funFact${idx}`).textContent = stage1Players[idx].funFact;
 
   updateProgress();
 
-  // Enable continue if all 3 answered
   if (s1Locked.every(Boolean)) {
     document.getElementById('stage1Next').disabled = false;
+    document.getElementById('stage1Next').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
 
 function goToStage2() {
   show('stage2Screen');
   renderStage2();
-  startTimer(30);
+  startTimer(45);
 }
 
 function pickS2(idx) {
@@ -640,7 +701,7 @@ function confirmSign() {
     c.style.cursor = 'default';
     if (i === stage2Answer) {
       c.classList.add('correct-sign');
-      document.getElementById(`s2badge${i}`).textContent = 'Best Value';
+      document.getElementById(`s2badge${i}`).textContent = 'Best Deal';
     }
     if (i === s2Choice && !isCorrect) {
       c.classList.add('wrong-sign');
@@ -649,8 +710,14 @@ function confirmSign() {
   });
   document.getElementById('stage2Confirm').disabled = true;
 
+  // Show explanation
+  const box = document.getElementById('s2RevealBox');
+  document.getElementById('s2RevealTitle').textContent = (isCorrect ? '\u2705 ' : '\u274C ') + stage2RevealTitle;
+  document.getElementById('s2RevealText').textContent = stage2RevealText;
+  box.classList.add('show');
+
   updateProgress();
-  setTimeout(showResults, 1800);
+  setTimeout(showResults, 2500);
 }
 
 function startTimer(seconds) {
@@ -668,10 +735,9 @@ function startTimer(seconds) {
     if (remaining <= 0) {
       clearInterval(timerInterval);
       remaining = 0;
-      // Auto-submit if player hasn't chosen
       if (!s2Locked) {
         if (s2Choice === null) {
-          s2Choice = 1 - stage2Answer; // wrong default
+          s2Choice = 1 - stage2Answer;
           document.querySelectorAll('.sign-card')[s2Choice].classList.add('selected-sign');
         }
         confirmSign();
@@ -679,7 +745,7 @@ function startTimer(seconds) {
     }
     const pct = (remaining / seconds) * 100;
     fill.style.width = pct + '%';
-    if (pct < 30) fill.classList.add('danger');
+    if (pct < 25) fill.classList.add('danger');
     text.textContent = remaining + 's';
   }, 1000);
 }
@@ -692,19 +758,73 @@ function showResults() {
   document.getElementById('s1Score').textContent = s1 + '/3';
   document.getElementById('s2Score').textContent = s2 + '/1';
 
-  let title, text;
+  let title, text, emoji;
   if (score === 4) {
-    title = "Elite GM Material";
-    text = "You correctly read both the scouting reports and the analytics. You understand that context matters \u2014 neither eye test nor spreadsheet is always right.";
-  } else if (score >= 2) {
-    title = "Solid Front Office Instincts";
-    text = "You showed a good understanding of when scouts and stats agree or diverge. Keep sharpening both lenses and you'll make better decisions.";
+    title = "All-Star GM!";
+    text = "You nailed every question! You know how to use both scouting reports AND stats to make smart decisions. NBA teams would be lucky to have you!";
+    emoji = "\u{1F3C6}";
+    launchConfetti();
+  } else if (score === 3) {
+    title = "Solid Team Builder!";
+    text = "Great job! You understand that sometimes scouts are right, sometimes the numbers are right, and sometimes both tell part of the story. Keep it up!";
+    emoji = "\u{1F31F}";
+    launchConfetti();
+  } else if (score === 2) {
+    title = "Good Start, Rookie!";
+    text = "Not bad for your first try! The biggest lesson: don't just look at one thing. Smart GMs use BOTH what people say AND what the numbers show.";
+    emoji = "\u{1F4AA}";
   } else {
-    title = "Back to the Film Room";
-    text = "Player evaluation is tricky! The key lesson: don't rely on just one perspective. Combine the eye test with the data for the full picture.";
+    title = "Keep Learning!";
+    text = "Player evaluation is tricky &mdash; even real NBA teams get it wrong sometimes! The key is to always look at the full picture: what scouts see AND what the stats say.";
+    emoji = "\u{1F4DA}";
   }
+  document.getElementById('resultsEmoji').textContent = emoji;
   document.getElementById('verdictTitle').textContent = title;
-  document.getElementById('verdictText').textContent = text;
+  document.getElementById('verdictText').innerHTML = text;
+}
+
+// ═══════════════════════════════════════════
+//  CONFETTI  (fun reward for good scores)
+// ═══════════════════════════════════════════
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#5b8aff','#ff7a5c','#3ee0a5','#ffc844','#c89aff','#5cc8f5'];
+  const pieces = [];
+  for (let i = 0; i < 120; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 80 + 40,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.random() * 10 - 5,
+      tiltAngle: Math.random() * Math.PI,
+      tiltSpeed: Math.random() * 0.1 + 0.05
+    });
+  }
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, 1 - frame / 120);
+      ctx.fillRect(p.x + p.tilt, p.y, p.r, p.r * 1.5);
+      p.y += 2.5 + p.r / 3;
+      p.tiltAngle += p.tiltSpeed;
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+    });
+    frame++;
+    if (frame < 140) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
 }
 
 // ═══════════════════════════════════════════
